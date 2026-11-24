@@ -22,6 +22,7 @@ export default function Layout() {
           <Link to="/demandes">Demandes</Link>
           <Link to="/rendez-vous">Rendez-vous</Link>
           <Link to="/dons">Dons</Link>
+          <Link to="/relances">Relances</Link>
           <Link to="/previsions">Prévisions</Link>
           <span className="spacer" />
           <Link to="/profil">Mon profil</Link>

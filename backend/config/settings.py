@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-
+import sys
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -122,3 +122,6 @@ else:
         "default": {"BACKEND": "django.core.mail.backends.console.EmailBackend"},
     }
     DEFAULT_FROM_EMAIL = "BloodLink <no-reply@bloodlink.tn>"
+
+if "test" in sys.argv:
+    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}

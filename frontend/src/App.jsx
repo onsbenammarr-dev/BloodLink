@@ -14,7 +14,7 @@ import RendezVous from "./pages/RendezVous";
 import PreDon from "./pages/PreDon";
 import Dons from "./pages/Dons";
 import Profil from "./pages/Profil";
-
+import Relances from "./pages/Relances";
 export default function App() {
   return (
     <Routes>
@@ -30,6 +30,7 @@ export default function App() {
       <Route path="/espace-admin" element={<EspaceAutre />} />
 
       <Route element={<Layout />}>
+      <Route path="/relances" element={<Relances />} />
         <Route path="/tableau-de-bord" element={<Dashboard />} />
         <Route path="/demandes/nouvelle" element={<NouvelleDemande />} />
         <Route path="/demandes" element={<Demandes />} />

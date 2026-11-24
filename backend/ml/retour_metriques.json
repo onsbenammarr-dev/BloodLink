@@ -1,0 +1,9 @@
+{
+  "source": "UCI Blood Transfusion Service Center (Taïwan, 748 donneurs)",
+  "modele": "Régression logistique",
+  "auc": 0.786,
+  "precision": 0.77,
+  "precision_reference": 0.765,
+  "donneurs_apprentissage": 561,
+  "donneurs_test": 187
+}

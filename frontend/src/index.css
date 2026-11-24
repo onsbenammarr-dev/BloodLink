@@ -221,3 +221,11 @@ input:disabled { background: var(--bg); color: var(--muted); cursor: not-allowed
 input.recherche { max-width: 340px; margin: 8px 0 12px; }
 .pagination { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 14px; font-size: 14px; color: var(--muted); }
 .pagination button { margin: 0; padding: 8px 14px; }
+
+/* Relances */
+.barre { height: 8px; background: var(--soft); border-radius: 99px; overflow: hidden; min-width: 90px; margin-bottom: 4px; }
+.barre > span { display: block; height: 8px; background: var(--red); }
+.cartes-ml { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 12px 0; }
+.cartes-ml .card span { display: block; color: var(--muted); font-size: 13px; margin-bottom: 4px; }
+.cartes-ml .card strong { font-size: 20px; }
+.note-ml { background: var(--soft); color: var(--deep); padding: 10px 12px; border-radius: 12px; font-size: 13px; }
