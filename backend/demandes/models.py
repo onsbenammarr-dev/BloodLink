@@ -17,7 +17,7 @@ class DemandeSang(models.Model):
     quantite = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     ville = models.CharField(max_length=100)
     delai_heures = models.PositiveIntegerField(default=24)
-    date_don = models.DateTimeField(null=True, blank=True)
+    date_don = models.DateTimeField()
     statut = models.CharField(max_length=20, choices=STATUTS, default="active")
     date_creation = models.DateTimeField(auto_now_add=True)
 

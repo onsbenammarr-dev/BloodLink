@@ -8,15 +8,20 @@ from donneurs.models import Reponse
 from .models import DemandeSang, DossierPredon, Don, RendezVous
 
 
+
 class DemandeSangSerializer(serializers.ModelSerializer):
     nb_reponses = serializers.SerializerMethodField()
     expiree = serializers.SerializerMethodField()
 
+    # Date obligatoire : aucune valeur NULL ou vide
+    date_don = serializers.DateTimeField(required=True, allow_null=False)
+
     class Meta:
         model = DemandeSang
         fields = [
-            "id", "groupe_sanguin", "quantite", "ville", "date_don", "delai_heures",
-            "statut", "date_creation", "nb_reponses", "expiree",
+            "id", "groupe_sanguin", "quantite", "ville", "date_don",
+            "delai_heures", "statut", "date_creation",
+            "nb_reponses", "expiree",
         ]
         read_only_fields = ["statut", "date_creation"]
 
@@ -25,20 +30,33 @@ class DemandeSangSerializer(serializers.ModelSerializer):
         return n if n is not None else obj.reponses.count()
 
     def get_expiree(self, obj):
-        return bool(obj.statut == "active" and obj.date_don and obj.date_don < timezone.now())
+        return bool(
+            obj.statut == "active"
+            and obj.date_don
+            and obj.date_don < timezone.now()
+        )
 
     def validate(self, attrs):
         now = timezone.now()
         date_don = attrs.get("date_don")
-        if date_don:
-            if date_don <= now:
-                raise serializers.ValidationError(
-                    {"date_don": "La date et l'heure du don doivent être dans le futur."}
-                )
-            attrs["delai_heures"] = max(1, math.ceil((date_don - now).total_seconds() / 3600))
-        else:
-            attrs["date_don"] = now + timedelta(hours=attrs.get("delai_heures", 24))
+
+        if date_don is None:
+            raise serializers.ValidationError({
+                "date_don": "La date et l'heure du don sont obligatoires."
+            })
+
+        if date_don <= now:
+            raise serializers.ValidationError({
+                "date_don": "La date et l'heure du don doivent être dans le futur."
+            })
+
+        attrs["delai_heures"] = max(
+            1,
+            math.ceil((date_don - now).total_seconds() / 3600)
+        )
+
         return attrs
+
 
 
 class ReponseSerializer(serializers.ModelSerializer):

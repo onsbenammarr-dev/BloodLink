@@ -4,10 +4,12 @@ from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from .qr import image_qr, reference
+import hmac
+import re
 from donneurs.models import Reponse
 from etablissements.permissions import IsEtablissement, IsEtablissementValide
-
+from django.http import HttpResponse
 from .emails import envoyer_alertes, envoyer_confirmation
 from .matching import donneurs_compatibles
 from .models import DemandeSang, Don, RendezVous
@@ -116,6 +118,40 @@ class RendezVousViewSet(
         s.save(rendez_vous=rdv, decision=decision, motifs="\n".join(motifs))
         return Response(s.data, status=201)
 
+    @action(detail=False, methods=["get"])
+    def verifier(self, request):
+        trouve = re.search(r"BL-(\d+)-([0-9A-Fa-f]{8})", request.query_params.get("code", ""))
+        if not trouve:
+            return Response(
+                {"detail": "Code illisible : collez la référence (BL-...) ou tout le texte du QR."},
+                status=400,
+            )
+        rdv = self.get_queryset().filter(pk=int(trouve.group(1))).first()
+        if not rdv or not hmac.compare_digest(reference(rdv), trouve.group(0).upper()):
+            return Response(
+                {"detail": "Code invalide, ou rendez-vous absent de votre établissement."},
+                status=400,
+            )
+        profil = getattr(rdv.donneur, "profil_donneur", None)
+        return Response({
+            "reference": reference(rdv),
+            "donneur": rdv.donneur.get_full_name() or rdv.donneur.email,
+            "email": rdv.donneur.email,
+            "telephone": profil.telephone if profil else "",
+            "groupe_sanguin": profil.groupe_sanguin if profil else "-",
+            "date_heure": rdv.date_heure,
+            "statut": rdv.statut,
+            "decision_predon": rdv.predon.decision if hasattr(rdv, "predon") else None,
+        })
+    @action(detail=True, methods=["get"])
+    def qr(self, request, pk=None):
+        rdv = self.get_object()
+        if rdv.statut not in ("confirme", "realise"):
+            return Response(
+                {"detail": "Le code QR est disponible après la confirmation du rendez-vous."},
+                status=400,
+            )
+        return HttpResponse(image_qr(rdv), content_type="image/png")
 
 class DonViewSet(
     mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet

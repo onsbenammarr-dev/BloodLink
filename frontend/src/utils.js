@@ -49,3 +49,10 @@ export const DEPISTAGES = {
   conforme: "Conforme",
   non_conforme: "Non conforme",
 };
+
+const JOURS_SEMAINE = ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"];
+
+export function etiquetteJour(iso) {
+  const d = new Date(iso + "T00:00:00");
+  return `${JOURS_SEMAINE[d.getDay()]} ${String(d.getDate()).padStart(2, "0")}`;
+}

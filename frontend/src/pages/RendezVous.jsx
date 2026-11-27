@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api";
+import BoutonQR from "../components/BoutonQR";
+import VerifierQR from "../components/VerifierQR";
 import { DECISIONS, STATUTS_RDV, fmt, messageErreur } from "../utils";
 
 const ONGLETS = [
@@ -52,6 +54,7 @@ export default function RendezVous() {
   return (
     <>
       <h2>Rendez-vous</h2>
+      <VerifierQR />
       <div className="onglets filtres">
         {ONGLETS.map(([cle, titre, test]) => (
           <button key={cle} className={onglet === cle ? "actif" : ""} onClick={() => setOnglet(cle)}>
@@ -78,29 +81,17 @@ export default function RendezVous() {
                 <td>{r.donneur_email}</td>
                 <td><strong>{r.groupe_sanguin}</strong></td>
                 <td>{fmt(r.date_heure)}</td>
-                <td>
-                  {r.decision_predon ? (
-                    <span className={`badge ${r.decision_predon}`}>{DECISIONS[r.decision_predon]}</span>
-                  ) : (
-                    "-"
-                  )}
-                </td>
+                
                 <td><span className={`badge ${r.statut}`}>{STATUTS_RDV[r.statut]}</span></td>
                 <td className="actions">
+                  {(r.statut === "confirme" || r.statut === "realise") && <BoutonQR id={r.id} />}
                   {r.statut === "propose" && (
                     <>
                       <button onClick={() => agir(r.id, "confirmer")}>Confirmer</button>
                       <button className="btn-sec" onClick={() => agir(r.id, "annuler")}>Refuser</button>
                     </>
                   )}
-                  {r.statut === "confirme" &&
-                    (r.decision_predon === "apte" ? (
-                      <button onClick={() => enregistrerDon(r)}>Enregistrer le don</button>
-                    ) : (
-                      <Link to={`/rendez-vous/${r.id}/predon`} className="btn-petit">
-                        {r.decision_predon ? "Revoir le pré-don" : "Faire le pré-don"}
-                      </Link>
-                    ))}
+                  
                 </td>
               </tr>
             ))}

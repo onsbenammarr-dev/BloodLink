@@ -229,3 +229,23 @@ input.recherche { max-width: 340px; margin: 8px 0 12px; }
 .cartes-ml .card span { display: block; color: var(--muted); font-size: 13px; margin-bottom: 4px; }
 .cartes-ml .card strong { font-size: 20px; }
 .note-ml { background: var(--soft); color: var(--deep); padding: 10px 12px; border-radius: 12px; font-size: 13px; }
+
+/* Prévision ML */
+.cartes-ml { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 12px 0; }
+.cartes-ml .card span { display: block; color: var(--muted); font-size: 13px; margin-bottom: 4px; }
+.cartes-ml .card strong { font-size: 20px; }
+.note-ml { background: var(--soft); color: var(--deep); padding: 10px 12px; border-radius: 12px; font-size: 13px; }
+.cellule { text-align: center; font-variant-numeric: tabular-nums; }
+.legende { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 6px; }
+.legende i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+details summary { cursor: pointer; }
+
+/* Vérification du QR */
+.ligne-verif { display: flex; gap: 10px; flex-wrap: wrap; }
+.ligne-verif input { flex: 1; min-width: 220px; }
+.ligne-verif button { margin-top: 0; }
+.resultat ul { margin: 8px 0; padding-left: 18px; }
+/* Fenêtre du QR */
+.fond-modal { position: fixed; inset: 0; background: rgba(42, 18, 21, 0.55); display: flex; align-items: center; justify-content: center; z-index: 50; }
+.modal { background: #fff; border-radius: 20px; padding: 24px; text-align: center; max-width: 340px; }
+.modal img { image-rendering: pixelated; }

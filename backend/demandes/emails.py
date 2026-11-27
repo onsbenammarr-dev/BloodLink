@@ -1,21 +1,10 @@
-import threading
-
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.utils import timezone
 
+from config.envoi import lancer
 
-def _envoyer(messages):
-    for m in messages:
-        try:
-            m.send()
-        except Exception as e:
-            print("Erreur envoi e-mail :", e)
-
-
-def _lancer(messages):
-    if messages:
-        threading.Thread(target=_envoyer, args=(messages,), daemon=True).start()
+from .qr import image_qr, reference
 
 
 def _formater(dt):
@@ -38,14 +27,22 @@ def envoyer_alertes(demande, profils):
         f"Répondez et réservez votre créneau : {lien}\n\n"
         f"Merci pour votre générosité.\nL'équipe BloodLink"
     )
-    _lancer([EmailMessage(sujet, corps, to=[p.user.email]) for p in profils])
+    lancer([EmailMessage(sujet, corps, to=[p.user.email]) for p in profils])
 
 
 def envoyer_confirmation(rdv):
+    nom = rdv.donneur.get_full_name() or rdv.donneur.email
     corps = (
-        f"Bonjour,\n\n"
+        f"Bonjour {nom},\n\n"
         f"Votre rendez-vous de don à {rdv.etablissement.nom} est confirmé "
         f"pour le {_formater(rdv.date_heure)}.\n\n"
+        f"Présentez le code QR joint à ce message à votre arrivée. Il contient vos "
+        f"informations de donneur (nom, groupe sanguin, coordonnées) et la référence "
+        f"{reference(rdv)}.\n\n"
         f"Merci !\nL'équipe BloodLink"
     )
-    _lancer([EmailMessage("Rendez-vous de don confirmé", corps, to=[rdv.donneur.email])])
+    message = EmailMessage(
+        "Rendez-vous de don confirmé : votre code QR", corps, to=[rdv.donneur.email]
+    )
+    message.attach("code-qr-bloodlink.png", image_qr(rdv), "image/png")
+    lancer([message])

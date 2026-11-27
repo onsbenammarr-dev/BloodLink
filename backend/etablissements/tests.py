@@ -19,21 +19,21 @@ class DecisionEmailTests(TestCase):
             statut_validation=statut, motif_refus=motif,
         )
 
-    @patch("etablissements.emails.threading.Thread")
-    def test_validation(self, thread):
+    @patch("etablissements.emails.lancer")
+    def test_validation(self, lancer):
         envoyer_decision(self._etab("valide"))
-        message = thread.call_args.kwargs["args"][0]
+        message = lancer.call_args.args[0][0]
         self.assertEqual(message.to, ["h@test.tn"])
         self.assertIn("validé", message.subject)
 
-    @patch("etablissements.emails.threading.Thread")
-    def test_refus_avec_motif(self, thread):
+    @patch("etablissements.emails.lancer")
+    def test_refus_avec_motif(self, lancer):
         envoyer_decision(self._etab("refuse", "Dossier incomplet"))
-        message = thread.call_args.kwargs["args"][0]
+        message = lancer.call_args.args[0][0]
         self.assertIn("pas été acceptée", message.subject)
         self.assertIn("Dossier incomplet", message.body)
 
-    @patch("etablissements.emails.threading.Thread")
-    def test_en_attente_n_envoie_rien(self, thread):
+    @patch("etablissements.emails.lancer")
+    def test_en_attente_n_envoie_rien(self, lancer):
         envoyer_decision(self._etab("en_attente"))
-        thread.assert_not_called()
+        lancer.assert_not_called()

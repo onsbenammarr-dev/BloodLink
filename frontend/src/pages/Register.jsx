@@ -7,7 +7,7 @@ import { GROUPES, messageErreur } from "../utils";
 export default function Register() {
   const [type, setType] = useState("donneur");
   const [form, setForm] = useState({
-    email: "", password: "", nom: "", ville: "", groupe_sanguin: "O+",
+    email: "", password: "", nom: "", prenom: "", telephone: "", ville: "", groupe_sanguin: "O+",
   });
   const [erreur, setErreur] = useState("");
   const [ok, setOk] = useState("");
@@ -20,7 +20,10 @@ export default function Register() {
     const donneur = type === "donneur";
     const url = donneur ? "/donneurs/register/" : "/etablissements/register/";
     const payload = donneur
-      ? { email: form.email, password: form.password, groupe_sanguin: form.groupe_sanguin, ville: form.ville }
+      ? {
+          email: form.email, password: form.password, groupe_sanguin: form.groupe_sanguin,
+          ville: form.ville, prenom: form.prenom, nom: form.nom, telephone: form.telephone,
+        }
       : { email: form.email, password: form.password, nom: form.nom, ville: form.ville };
     try {
       await api.post(url, payload);
@@ -64,6 +67,13 @@ export default function Register() {
         )}
         {type === "donneur" && (
           <>
+            <label>Prénom</label>
+            <input name="prenom" value={form.prenom} onChange={change} required />
+            <label>Nom</label>
+            <input name="nom" value={form.nom} onChange={change} required />
+            <label>Téléphone</label>
+            <input name="telephone" type="tel" placeholder="+216 20 123 456"
+                   value={form.telephone} onChange={change} required />
             <label>Groupe sanguin</label>
             <select name="groupe_sanguin" value={form.groupe_sanguin} onChange={change}>
               {GROUPES.map((g) => <option key={g}>{g}</option>)}

@@ -1,0 +1,12 @@
+{
+  "source": "synthetique",
+  "modele": "Forêt aléatoire",
+  "mae": 0.807,
+  "mae_reference": 0.872,
+  "scores": {
+    "Régression linéaire": 0.813,
+    "Forêt aléatoire": 0.807
+  },
+  "lignes_apprentissage": 3728,
+  "lignes_test": 480
+}

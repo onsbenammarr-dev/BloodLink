@@ -1,14 +1,7 @@
-import threading
-
 from django.conf import settings
 from django.core.mail import EmailMessage
 
-
-def _envoyer(message):
-    try:
-        message.send()
-    except Exception as e:
-        print("Erreur envoi e-mail :", e)
+from config.envoi import lancer
 
 
 def envoyer_decision(etab):
@@ -36,5 +29,4 @@ def envoyer_decision(etab):
     else:
         return
 
-    message = EmailMessage(sujet, corps, to=[etab.user.email])
-    threading.Thread(target=_envoyer, args=(message,), daemon=True).start()
+    lancer([EmailMessage(sujet, corps, to=[etab.user.email])])

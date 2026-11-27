@@ -9,6 +9,7 @@ class ProfilDonneur(models.Model):
     )
     groupe_sanguin = models.CharField(max_length=3, choices=GROUPES)
     ville = models.CharField(max_length=100)
+    telephone = models.CharField(max_length=30, blank=True, default="")
     disponible = models.BooleanField(default=True)
 
     def __str__(self):

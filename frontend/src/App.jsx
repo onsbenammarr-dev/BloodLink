@@ -11,10 +11,10 @@ import NouvelleDemande from "./pages/NouvelleDemande";
 import Demandes from "./pages/Demandes";
 import DemandeDetail from "./pages/DemandeDetail";
 import RendezVous from "./pages/RendezVous";
-import PreDon from "./pages/PreDon";
 import Dons from "./pages/Dons";
 import Profil from "./pages/Profil";
 import Relances from "./pages/Relances";
+import Prevision from "./pages/Prevision";
 export default function App() {
   return (
     <Routes>
@@ -36,8 +36,8 @@ export default function App() {
         <Route path="/demandes" element={<Demandes />} />
         <Route path="/demandes/:id" element={<DemandeDetail />} />
         <Route path="/rendez-vous" element={<RendezVous />} />
-        <Route path="/rendez-vous/:id/predon" element={<PreDon />} />
         <Route path="/dons" element={<Dons />} />
+        <Route path="/previsions" element={<Prevision />} />
         <Route path="/profil" element={<Profil />} />
       </Route>
 

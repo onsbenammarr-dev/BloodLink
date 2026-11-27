@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api";
+import GraphiquePrevision from "../components/GraphiquePrevision";
 import { STATUTS_RDV, fmt, messageErreur } from "../utils";
 
 const STATUTS = {
@@ -12,6 +13,7 @@ const STATUTS = {
 export default function Dashboard() {
   const [etab, setEtab] = useState(null);
   const [stats, setStats] = useState(null);
+  const [prev, setPrev] = useState(null);
   const [erreur, setErreur] = useState("");
 
   useEffect(() => {
@@ -21,6 +23,7 @@ export default function Dashboard() {
         setStats(b.data);
       })
       .catch((err) => setErreur(messageErreur(err)));
+    api.get("/previsions/").then((r) => setPrev(r.data)).catch(() => {});
   }, []);
 
   if (erreur) return <p className="alerte">{erreur}</p>;
@@ -53,6 +56,16 @@ export default function Dashboard() {
           </div>
         ))}
       </div>
+
+      {prev && (
+        <div className="card" style={{ marginTop: 16 }}>
+          <div className="entete">
+            <h3 style={{ margin: 0 }}>Prévision de la demande : 7 prochains jours</h3>
+            <Link to="/previsions" className="lien-voir">Voir le détail</Link>
+          </div>
+          <GraphiquePrevision historique={prev.historique} jours={prev.jours} total={prev.total} />
+        </div>
+      )}
 
       <div className="listes">
         <div className="card">

@@ -1,6 +1,5 @@
 import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
-
 export default function Layout() {
   const navigate = useNavigate();
 
@@ -22,8 +21,8 @@ export default function Layout() {
           <Link to="/demandes">Demandes</Link>
           <Link to="/rendez-vous">Rendez-vous</Link>
           <Link to="/dons">Dons</Link>
-          <Link to="/relances">Relances</Link>
           <Link to="/previsions">Prévisions</Link>
+          <Link to="/relances">Relances</Link>
           <span className="spacer" />
           <Link to="/profil">Mon profil</Link>
           <button onClick={logout}>Déconnexion</button>
